@@ -21,16 +21,18 @@ def choose_word():
 
 
 def user_guessed_word(guess, word):
-    print(guess)
-    print(word)
     if guess == word:
-        print("(^o^)~≪☆*CONGRATULATIONS*☆≫~(^o^)／ You Win! ")
         return True
     return False
 
 
 def win():
     print("(^o^)~≪☆*CONGRATULATIONS*☆≫~(^o^)／ You Win! ")
+
+
+def lose(word):
+    print("Sorry, game over ¯\\_(ツ)_/¯.")
+    print(f"The word is: {word}")
 
 
 def load_stages(fname):
@@ -54,14 +56,14 @@ if __name__ == "__main__":
     # number of guessed letters
     corrects = 0
     # generate a random English word, present the number of letters
-    guessword = choose_word()
-    print(guessword)
-    print(f"This word has {len(guessword)-1} letters.\nYou have 11 chances.")
+    # strip the "\n"
+    guessword = choose_word().rstrip()
+    print(f"This word has {len(guessword)} letters.\nYou have 11 chances.")
     display = []
-    for i in range(len(guessword)-1):
+    for i in range(len(guessword)):
         display.append("_ ")
     print(" ".join(display))
-    charOrdering = list(guessword)[:-1]
+    charOrdering = list(guessword)
     # count the numbers of correct letters
     count = 0
     # record the letters that have been guessed
@@ -70,11 +72,10 @@ if __name__ == "__main__":
     while True:
         # when the chances are used up
         if mistakes == 11:
-            print("Sorry, game over ¯\\_(ツ)_/¯.")
+            lose(guessword)
             break
         # take input letter
         inp = input()
-        pdb.set_trace()
         # check input size, can only allow 1 letter or the exact word
         if user_guessed_word(inp, guessword):
             win()
@@ -90,7 +91,7 @@ if __name__ == "__main__":
                 print(" ".join(display))
                 count += len(indexes)
                 guessed.append(inp)
-                if count == len(guessword)-1:
+                if count == len(guessword):
                     win()
                     break
             else:
@@ -99,3 +100,5 @@ if __name__ == "__main__":
                 draw(mistakes, mistakes_dict)
         elif len(inp) == 0:
             print("Please guess a letter.")
+        else:
+            print("Please enter either one letter or guess a word!")
